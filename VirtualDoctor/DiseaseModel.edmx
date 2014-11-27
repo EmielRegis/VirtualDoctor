@@ -1,0 +1,576 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DiseaseDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ConcreteSymptomDiseaseConnections">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Disease" Type="int" Nullable="false" />
+          <Property Name="Symptom" Type="int" Nullable="false" />
+          <Property Name="ProbabilisticEvaluation" Type="float" />
+          <Property Name="OccurencesNumber" Type="int" />
+          <Property Name="YesAnswers" Type="int" />
+          <Property Name="ProbablyYesAnswers" Type="int" />
+          <Property Name="DontKnowAnswers" Type="int" />
+          <Property Name="ProbablyNotAnswers" Type="int" />
+          <Property Name="NotAnswers" Type="int" />
+        </EntityType>
+        <EntityType Name="DiseaseCorelations">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DiseaseA" Type="int" Nullable="false" />
+          <Property Name="DiseaseB" Type="int" Nullable="false" />
+          <Property Name="CommonCases" Type="int" />
+          <Property Name="CorelationPower" Type="int" />
+          <Property Name="CorelationDirection" Type="int" />
+        </EntityType>
+        <EntityType Name="Diseases">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="50" />
+          <Property Name="OccurencesNumber" Type="int" />
+        </EntityType>
+        <EntityType Name="PatientDiseaseCases">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Patient" Type="int" Nullable="false" />
+          <Property Name="Disease" Type="int" Nullable="false" />
+          <Property Name="DiagnosisDate" Type="datetime" />
+          <Property Name="CureDate" Type="datetime" />
+          <Property Name="WasDeadly" Type="int" />
+          <Property Name="CaseDescription" Type="varchar" MaxLength="150" />
+        </EntityType>
+        <EntityType Name="Patients">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="LastName" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="MailAddress" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="Password" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="Activated" Type="int" />
+          <Property Name="PeselNumber" Type="char" MaxLength="9" />
+          <Property Name="Address" Type="varchar" MaxLength="150" />
+          <Property Name="PhoneNumber" Type="varchar" MaxLength="15" />
+        </EntityType>
+        <EntityType Name="SymptomCathegories">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ParentCathegory" Type="int" />
+        </EntityType>
+        <EntityType Name="Symptoms">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="QuickDescription" Type="varchar" MaxLength="50" />
+          <Property Name="SymptomCathegory" Type="int" />
+          <Property Name="GeneralizationDegree" Type="int" />
+        </EntityType>
+        <Association Name="FK_ConcreteSymptomDiseaseConnections_Diseases">
+          <End Role="Diseases" Type="Self.Diseases" Multiplicity="1" />
+          <End Role="ConcreteSymptomDiseaseConnections" Type="Self.ConcreteSymptomDiseaseConnections" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Diseases">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ConcreteSymptomDiseaseConnections">
+              <PropertyRef Name="Disease" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ConcreteSymptomDiseaseConnections_Symptoms">
+          <End Role="Symptoms" Type="Self.Symptoms" Multiplicity="1" />
+          <End Role="ConcreteSymptomDiseaseConnections" Type="Self.ConcreteSymptomDiseaseConnections" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Symptoms">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ConcreteSymptomDiseaseConnections">
+              <PropertyRef Name="Symptom" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DiseaseCorelations_DeasesesA">
+          <End Role="Diseases" Type="Self.Diseases" Multiplicity="1" />
+          <End Role="DiseaseCorelations" Type="Self.DiseaseCorelations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Diseases">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DiseaseCorelations">
+              <PropertyRef Name="DiseaseA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DiseaseCorelations_DiseasesB">
+          <End Role="Diseases" Type="Self.Diseases" Multiplicity="1" />
+          <End Role="DiseaseCorelations" Type="Self.DiseaseCorelations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Diseases">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DiseaseCorelations">
+              <PropertyRef Name="DiseaseB" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PatientDiseaseCases_Diseases">
+          <End Role="Diseases" Type="Self.Diseases" Multiplicity="1" />
+          <End Role="PatientDiseaseCases" Type="Self.PatientDiseaseCases" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Diseases">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PatientDiseaseCases">
+              <PropertyRef Name="Disease" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PatientDiseaseCases_Patients">
+          <End Role="Patients" Type="Self.Patients" Multiplicity="1" />
+          <End Role="PatientDiseaseCases" Type="Self.PatientDiseaseCases" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patients">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PatientDiseaseCases">
+              <PropertyRef Name="Patient" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SymptomCathegories_SymptomCathegories">
+          <End Role="SymptomCathegories" Type="Self.SymptomCathegories" Multiplicity="0..1" />
+          <End Role="SymptomCathegories1" Type="Self.SymptomCathegories" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SymptomCathegories">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SymptomCathegories1">
+              <PropertyRef Name="ParentCathegory" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Symptoms_SymptomCathegories">
+          <End Role="SymptomCathegories" Type="Self.SymptomCathegories" Multiplicity="0..1" />
+          <End Role="Symptoms" Type="Self.Symptoms" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SymptomCathegories">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Symptoms">
+              <PropertyRef Name="SymptomCathegory" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DiseaseDatabaseModelStoreContainer">
+          <EntitySet Name="ConcreteSymptomDiseaseConnections" EntityType="Self.ConcreteSymptomDiseaseConnections" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DiseaseCorelations" EntityType="Self.DiseaseCorelations" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Diseases" EntityType="Self.Diseases" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PatientDiseaseCases" EntityType="Self.PatientDiseaseCases" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Patients" EntityType="Self.Patients" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SymptomCathegories" EntityType="Self.SymptomCathegories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Symptoms" EntityType="Self.Symptoms" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ConcreteSymptomDiseaseConnections_Diseases" Association="Self.FK_ConcreteSymptomDiseaseConnections_Diseases">
+            <End Role="Diseases" EntitySet="Diseases" />
+            <End Role="ConcreteSymptomDiseaseConnections" EntitySet="ConcreteSymptomDiseaseConnections" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ConcreteSymptomDiseaseConnections_Symptoms" Association="Self.FK_ConcreteSymptomDiseaseConnections_Symptoms">
+            <End Role="Symptoms" EntitySet="Symptoms" />
+            <End Role="ConcreteSymptomDiseaseConnections" EntitySet="ConcreteSymptomDiseaseConnections" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DiseaseCorelations_DeasesesA" Association="Self.FK_DiseaseCorelations_DeasesesA">
+            <End Role="Diseases" EntitySet="Diseases" />
+            <End Role="DiseaseCorelations" EntitySet="DiseaseCorelations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DiseaseCorelations_DiseasesB" Association="Self.FK_DiseaseCorelations_DiseasesB">
+            <End Role="Diseases" EntitySet="Diseases" />
+            <End Role="DiseaseCorelations" EntitySet="DiseaseCorelations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PatientDiseaseCases_Diseases" Association="Self.FK_PatientDiseaseCases_Diseases">
+            <End Role="Diseases" EntitySet="Diseases" />
+            <End Role="PatientDiseaseCases" EntitySet="PatientDiseaseCases" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PatientDiseaseCases_Patients" Association="Self.FK_PatientDiseaseCases_Patients">
+            <End Role="Patients" EntitySet="Patients" />
+            <End Role="PatientDiseaseCases" EntitySet="PatientDiseaseCases" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SymptomCathegories_SymptomCathegories" Association="Self.FK_SymptomCathegories_SymptomCathegories">
+            <End Role="SymptomCathegories" EntitySet="SymptomCathegories" />
+            <End Role="SymptomCathegories1" EntitySet="SymptomCathegories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Symptoms_SymptomCathegories" Association="Self.FK_Symptoms_SymptomCathegories">
+            <End Role="SymptomCathegories" EntitySet="SymptomCathegories" />
+            <End Role="Symptoms" EntitySet="Symptoms" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DiseaseDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ConcreteSymptomDiseaseConnection">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Disease" Type="Int32" Nullable="false" />
+          <Property Name="Symptom" Type="Int32" Nullable="false" />
+          <Property Name="ProbabilisticEvaluation" Type="Double" />
+          <Property Name="OccurencesNumber" Type="Int32" />
+          <Property Name="YesAnswers" Type="Int32" />
+          <Property Name="ProbablyYesAnswers" Type="Int32" />
+          <Property Name="DontKnowAnswers" Type="Int32" />
+          <Property Name="ProbablyNotAnswers" Type="Int32" />
+          <Property Name="NotAnswers" Type="Int32" />
+          <NavigationProperty Name="Disease1" Relationship="Self.FK_ConcreteSymptomDiseaseConnections_Diseases" FromRole="ConcreteSymptomDiseaseConnections" ToRole="Diseases" />
+          <NavigationProperty Name="Symptom1" Relationship="Self.FK_ConcreteSymptomDiseaseConnections_Symptoms" FromRole="ConcreteSymptomDiseaseConnections" ToRole="Symptoms" />
+        </EntityType>
+        <EntityType Name="DiseaseCorelation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DiseaseA" Type="Int32" Nullable="false" />
+          <Property Name="DiseaseB" Type="Int32" Nullable="false" />
+          <Property Name="CommonCases" Type="Int32" />
+          <Property Name="CorelationPower" Type="Int32" />
+          <Property Name="CorelationDirection" Type="Int32" />
+          <NavigationProperty Name="Disease" Relationship="Self.FK_DiseaseCorelations_DeasesesA" FromRole="DiseaseCorelations" ToRole="Diseases" />
+          <NavigationProperty Name="Disease1" Relationship="Self.FK_DiseaseCorelations_DiseasesB" FromRole="DiseaseCorelations" ToRole="Diseases" />
+        </EntityType>
+        <EntityType Name="Disease">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="OccurencesNumber" Type="Int32" />
+          <NavigationProperty Name="ConcreteSymptomDiseaseConnections" Relationship="Self.FK_ConcreteSymptomDiseaseConnections_Diseases" FromRole="Diseases" ToRole="ConcreteSymptomDiseaseConnections" />
+          <NavigationProperty Name="DiseaseCorelations" Relationship="Self.FK_DiseaseCorelations_DeasesesA" FromRole="Diseases" ToRole="DiseaseCorelations" />
+          <NavigationProperty Name="DiseaseCorelations1" Relationship="Self.FK_DiseaseCorelations_DiseasesB" FromRole="Diseases" ToRole="DiseaseCorelations" />
+          <NavigationProperty Name="PatientDiseaseCases" Relationship="Self.FK_PatientDiseaseCases_Diseases" FromRole="Diseases" ToRole="PatientDiseaseCases" />
+        </EntityType>
+        <EntityType Name="PatientDiseaseCas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Patient" Type="Int32" Nullable="false" />
+          <Property Name="Disease" Type="Int32" Nullable="false" />
+          <Property Name="DiagnosisDate" Type="DateTime" Precision="3" />
+          <Property Name="CureDate" Type="DateTime" Precision="3" />
+          <Property Name="WasDeadly" Type="Int32" />
+          <Property Name="CaseDescription" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Disease1" Relationship="Self.FK_PatientDiseaseCases_Diseases" FromRole="PatientDiseaseCases" ToRole="Diseases" />
+          <NavigationProperty Name="Patient1" Relationship="Self.FK_PatientDiseaseCases_Patients" FromRole="PatientDiseaseCases" ToRole="Patients" />
+        </EntityType>
+        <EntityType Name="Patient">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="MailAddress" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Activated" Type="Int32" />
+          <Property Name="PeselNumber" Type="String" MaxLength="9" FixedLength="true" Unicode="false" />
+          <Property Name="Address" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="PatientDiseaseCases" Relationship="Self.FK_PatientDiseaseCases_Patients" FromRole="Patients" ToRole="PatientDiseaseCases" />
+        </EntityType>
+        <EntityType Name="SymptomCathegory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ParentCathegory" Type="Int32" />
+          <NavigationProperty Name="SymptomCathegories1" Relationship="Self.FK_SymptomCathegories_SymptomCathegories" FromRole="SymptomCathegories" ToRole="SymptomCathegories1" />
+          <NavigationProperty Name="SymptomCathegory1" Relationship="Self.FK_SymptomCathegories_SymptomCathegories" FromRole="SymptomCathegories1" ToRole="SymptomCathegories" />
+          <NavigationProperty Name="Symptoms" Relationship="Self.FK_Symptoms_SymptomCathegories" FromRole="SymptomCathegories" ToRole="Symptoms" />
+        </EntityType>
+        <EntityType Name="Symptom">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="QuickDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SymptomCathegory" Type="Int32" />
+          <Property Name="GeneralizationDegree" Type="Int32" />
+          <NavigationProperty Name="ConcreteSymptomDiseaseConnections" Relationship="Self.FK_ConcreteSymptomDiseaseConnections_Symptoms" FromRole="Symptoms" ToRole="ConcreteSymptomDiseaseConnections" />
+          <NavigationProperty Name="SymptomCathegory1" Relationship="Self.FK_Symptoms_SymptomCathegories" FromRole="Symptoms" ToRole="SymptomCathegories" />
+        </EntityType>
+        <Association Name="FK_ConcreteSymptomDiseaseConnections_Diseases">
+          <End Role="Diseases" Type="Self.Disease" Multiplicity="1" />
+          <End Role="ConcreteSymptomDiseaseConnections" Type="Self.ConcreteSymptomDiseaseConnection" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Diseases">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ConcreteSymptomDiseaseConnections">
+              <PropertyRef Name="Disease" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ConcreteSymptomDiseaseConnections_Symptoms">
+          <End Role="Symptoms" Type="Self.Symptom" Multiplicity="1" />
+          <End Role="ConcreteSymptomDiseaseConnections" Type="Self.ConcreteSymptomDiseaseConnection" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Symptoms">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ConcreteSymptomDiseaseConnections">
+              <PropertyRef Name="Symptom" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DiseaseCorelations_DeasesesA">
+          <End Role="Diseases" Type="Self.Disease" Multiplicity="1" />
+          <End Role="DiseaseCorelations" Type="Self.DiseaseCorelation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Diseases">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DiseaseCorelations">
+              <PropertyRef Name="DiseaseA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DiseaseCorelations_DiseasesB">
+          <End Role="Diseases" Type="Self.Disease" Multiplicity="1" />
+          <End Role="DiseaseCorelations" Type="Self.DiseaseCorelation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Diseases">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DiseaseCorelations">
+              <PropertyRef Name="DiseaseB" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PatientDiseaseCases_Diseases">
+          <End Role="Diseases" Type="Self.Disease" Multiplicity="1" />
+          <End Role="PatientDiseaseCases" Type="Self.PatientDiseaseCas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Diseases">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PatientDiseaseCases">
+              <PropertyRef Name="Disease" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PatientDiseaseCases_Patients">
+          <End Role="Patients" Type="Self.Patient" Multiplicity="1" />
+          <End Role="PatientDiseaseCases" Type="Self.PatientDiseaseCas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patients">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PatientDiseaseCases">
+              <PropertyRef Name="Patient" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SymptomCathegories_SymptomCathegories">
+          <End Role="SymptomCathegories" Type="Self.SymptomCathegory" Multiplicity="0..1" />
+          <End Role="SymptomCathegories1" Type="Self.SymptomCathegory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SymptomCathegories">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SymptomCathegories1">
+              <PropertyRef Name="ParentCathegory" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Symptoms_SymptomCathegories">
+          <End Role="SymptomCathegories" Type="Self.SymptomCathegory" Multiplicity="0..1" />
+          <End Role="Symptoms" Type="Self.Symptom" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SymptomCathegories">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Symptoms">
+              <PropertyRef Name="SymptomCathegory" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DiseaseDatabaseEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ConcreteSymptomDiseaseConnections" EntityType="Self.ConcreteSymptomDiseaseConnection" />
+          <EntitySet Name="DiseaseCorelations" EntityType="Self.DiseaseCorelation" />
+          <EntitySet Name="Diseases" EntityType="Self.Disease" />
+          <EntitySet Name="PatientDiseaseCases" EntityType="Self.PatientDiseaseCas" />
+          <EntitySet Name="Patients" EntityType="Self.Patient" />
+          <EntitySet Name="SymptomCathegories" EntityType="Self.SymptomCathegory" />
+          <EntitySet Name="Symptoms" EntityType="Self.Symptom" />
+          <AssociationSet Name="FK_ConcreteSymptomDiseaseConnections_Diseases" Association="Self.FK_ConcreteSymptomDiseaseConnections_Diseases">
+            <End Role="Diseases" EntitySet="Diseases" />
+            <End Role="ConcreteSymptomDiseaseConnections" EntitySet="ConcreteSymptomDiseaseConnections" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ConcreteSymptomDiseaseConnections_Symptoms" Association="Self.FK_ConcreteSymptomDiseaseConnections_Symptoms">
+            <End Role="Symptoms" EntitySet="Symptoms" />
+            <End Role="ConcreteSymptomDiseaseConnections" EntitySet="ConcreteSymptomDiseaseConnections" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DiseaseCorelations_DeasesesA" Association="Self.FK_DiseaseCorelations_DeasesesA">
+            <End Role="Diseases" EntitySet="Diseases" />
+            <End Role="DiseaseCorelations" EntitySet="DiseaseCorelations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DiseaseCorelations_DiseasesB" Association="Self.FK_DiseaseCorelations_DiseasesB">
+            <End Role="Diseases" EntitySet="Diseases" />
+            <End Role="DiseaseCorelations" EntitySet="DiseaseCorelations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PatientDiseaseCases_Diseases" Association="Self.FK_PatientDiseaseCases_Diseases">
+            <End Role="Diseases" EntitySet="Diseases" />
+            <End Role="PatientDiseaseCases" EntitySet="PatientDiseaseCases" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PatientDiseaseCases_Patients" Association="Self.FK_PatientDiseaseCases_Patients">
+            <End Role="Patients" EntitySet="Patients" />
+            <End Role="PatientDiseaseCases" EntitySet="PatientDiseaseCases" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SymptomCathegories_SymptomCathegories" Association="Self.FK_SymptomCathegories_SymptomCathegories">
+            <End Role="SymptomCathegories" EntitySet="SymptomCathegories" />
+            <End Role="SymptomCathegories1" EntitySet="SymptomCathegories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Symptoms_SymptomCathegories" Association="Self.FK_Symptoms_SymptomCathegories">
+            <End Role="SymptomCathegories" EntitySet="SymptomCathegories" />
+            <End Role="Symptoms" EntitySet="Symptoms" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DiseaseDatabaseModelStoreContainer" CdmEntityContainer="DiseaseDatabaseEntities">
+          <EntitySetMapping Name="ConcreteSymptomDiseaseConnections">
+            <EntityTypeMapping TypeName="DiseaseDatabaseModel.ConcreteSymptomDiseaseConnection">
+              <MappingFragment StoreEntitySet="ConcreteSymptomDiseaseConnections">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Disease" ColumnName="Disease" />
+                <ScalarProperty Name="Symptom" ColumnName="Symptom" />
+                <ScalarProperty Name="ProbabilisticEvaluation" ColumnName="ProbabilisticEvaluation" />
+                <ScalarProperty Name="OccurencesNumber" ColumnName="OccurencesNumber" />
+                <ScalarProperty Name="YesAnswers" ColumnName="YesAnswers" />
+                <ScalarProperty Name="ProbablyYesAnswers" ColumnName="ProbablyYesAnswers" />
+                <ScalarProperty Name="DontKnowAnswers" ColumnName="DontKnowAnswers" />
+                <ScalarProperty Name="ProbablyNotAnswers" ColumnName="ProbablyNotAnswers" />
+                <ScalarProperty Name="NotAnswers" ColumnName="NotAnswers" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DiseaseCorelations">
+            <EntityTypeMapping TypeName="DiseaseDatabaseModel.DiseaseCorelation">
+              <MappingFragment StoreEntitySet="DiseaseCorelations">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="DiseaseA" ColumnName="DiseaseA" />
+                <ScalarProperty Name="DiseaseB" ColumnName="DiseaseB" />
+                <ScalarProperty Name="CommonCases" ColumnName="CommonCases" />
+                <ScalarProperty Name="CorelationPower" ColumnName="CorelationPower" />
+                <ScalarProperty Name="CorelationDirection" ColumnName="CorelationDirection" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Diseases">
+            <EntityTypeMapping TypeName="DiseaseDatabaseModel.Disease">
+              <MappingFragment StoreEntitySet="Diseases">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="OccurencesNumber" ColumnName="OccurencesNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PatientDiseaseCases">
+            <EntityTypeMapping TypeName="DiseaseDatabaseModel.PatientDiseaseCas">
+              <MappingFragment StoreEntitySet="PatientDiseaseCases">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Patient" ColumnName="Patient" />
+                <ScalarProperty Name="Disease" ColumnName="Disease" />
+                <ScalarProperty Name="DiagnosisDate" ColumnName="DiagnosisDate" />
+                <ScalarProperty Name="CureDate" ColumnName="CureDate" />
+                <ScalarProperty Name="WasDeadly" ColumnName="WasDeadly" />
+                <ScalarProperty Name="CaseDescription" ColumnName="CaseDescription" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Patients">
+            <EntityTypeMapping TypeName="DiseaseDatabaseModel.Patient">
+              <MappingFragment StoreEntitySet="Patients">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="MailAddress" ColumnName="MailAddress" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Activated" ColumnName="Activated" />
+                <ScalarProperty Name="PeselNumber" ColumnName="PeselNumber" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SymptomCathegories">
+            <EntityTypeMapping TypeName="DiseaseDatabaseModel.SymptomCathegory">
+              <MappingFragment StoreEntitySet="SymptomCathegories">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ParentCathegory" ColumnName="ParentCathegory" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Symptoms">
+            <EntityTypeMapping TypeName="DiseaseDatabaseModel.Symptom">
+              <MappingFragment StoreEntitySet="Symptoms">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="QuickDescription" ColumnName="QuickDescription" />
+                <ScalarProperty Name="SymptomCathegory" ColumnName="SymptomCathegory" />
+                <ScalarProperty Name="GeneralizationDegree" ColumnName="GeneralizationDegree" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

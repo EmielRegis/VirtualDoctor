@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="71d526a28d5a45daa2dac46563a212fd" Name="Diagram1">
+        <EntityTypeShape EntityType="DiseaseDatabaseModel.ConcreteSymptomDiseaseConnection" Width="2.125" PointX="2.5" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DiseaseDatabaseModel.DiseaseCorelation" Width="2" PointX="5" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DiseaseDatabaseModel.Disease" Width="1.5" PointX="5.25" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DiseaseDatabaseModel.PatientDiseaseCas" Width="1.625" PointX="7.125" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DiseaseDatabaseModel.Patient" Width="1.5" PointX="9.25" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DiseaseDatabaseModel.SymptomCathegory" Width="1.5" PointX="0.5" PointY="3.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="DiseaseDatabaseModel.Symptom" Width="1.5" PointX="0.5" PointY="0.5" IsExpanded="true" />
+        <AssociationConnector Association="DiseaseDatabaseModel.FK_ConcreteSymptomDiseaseConnections_Diseases" ManuallyRouted="false" />
+        <AssociationConnector Association="DiseaseDatabaseModel.FK_ConcreteSymptomDiseaseConnections_Symptoms" ManuallyRouted="false" />
+        <AssociationConnector Association="DiseaseDatabaseModel.FK_DiseaseCorelations_DeasesesA" ManuallyRouted="false" />
+        <AssociationConnector Association="DiseaseDatabaseModel.FK_DiseaseCorelations_DiseasesB" ManuallyRouted="false" />
+        <AssociationConnector Association="DiseaseDatabaseModel.FK_PatientDiseaseCases_Diseases" ManuallyRouted="false" />
+        <AssociationConnector Association="DiseaseDatabaseModel.FK_PatientDiseaseCases_Patients" ManuallyRouted="false" />
+        <AssociationConnector Association="DiseaseDatabaseModel.FK_SymptomCathegories_SymptomCathegories" ManuallyRouted="false" />
+        <AssociationConnector Association="DiseaseDatabaseModel.FK_Symptoms_SymptomCathegories" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
