@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="DiseaseDatabaseServerModelStoreContainer" CdmEntityContainer="DiseaseDatabaseServerEntities">
+    <EntitySetMapping Name="ConcreteSymptomDiseaseConnections">
+      <EntityTypeMapping TypeName="DiseaseDatabaseServerModel.ConcreteSymptomDiseaseConnection">
+        <MappingFragment StoreEntitySet="ConcreteSymptomDiseaseConnections">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Disease" ColumnName="Disease" />
+          <ScalarProperty Name="Symptom" ColumnName="Symptom" />
+          <ScalarProperty Name="SymptomRelationType" ColumnName="SymptomRelationType" />
+          <ScalarProperty Name="ProbabilisticEvaluation" ColumnName="ProbabilisticEvaluation" />
+          <ScalarProperty Name="OccurencesNumber" ColumnName="OccurencesNumber" />
+          <ScalarProperty Name="YesAnswers" ColumnName="YesAnswers" />
+          <ScalarProperty Name="ProbablyYesAnswers" ColumnName="ProbablyYesAnswers" />
+          <ScalarProperty Name="DontKnowAnswers" ColumnName="DontKnowAnswers" />
+          <ScalarProperty Name="ProbablyNotAnswers" ColumnName="ProbablyNotAnswers" />
+          <ScalarProperty Name="NotAnswers" ColumnName="NotAnswers" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DiseaseCorelations">
+      <EntityTypeMapping TypeName="DiseaseDatabaseServerModel.DiseaseCorelation">
+        <MappingFragment StoreEntitySet="DiseaseCorelations">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="DiseaseA" ColumnName="DiseaseA" />
+          <ScalarProperty Name="DiseaseB" ColumnName="DiseaseB" />
+          <ScalarProperty Name="CommonCases" ColumnName="CommonCases" />
+          <ScalarProperty Name="CorelationPower" ColumnName="CorelationPower" />
+          <ScalarProperty Name="CorelationDirection" ColumnName="CorelationDirection" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Diseases">
+      <EntityTypeMapping TypeName="DiseaseDatabaseServerModel.Disease">
+        <MappingFragment StoreEntitySet="Diseases">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="OccurencesNumber" ColumnName="OccurencesNumber" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PatientDiseaseCases">
+      <EntityTypeMapping TypeName="DiseaseDatabaseServerModel.PatientDiseaseCas">
+        <MappingFragment StoreEntitySet="PatientDiseaseCases">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Patient" ColumnName="Patient" />
+          <ScalarProperty Name="Disease" ColumnName="Disease" />
+          <ScalarProperty Name="DiagnosisDate" ColumnName="DiagnosisDate" />
+          <ScalarProperty Name="CureDate" ColumnName="CureDate" />
+          <ScalarProperty Name="WasDeadly" ColumnName="WasDeadly" />
+          <ScalarProperty Name="CaseDescription" ColumnName="CaseDescription" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Patients">
+      <EntityTypeMapping TypeName="DiseaseDatabaseServerModel.Patient">
+        <MappingFragment StoreEntitySet="Patients">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="MailAddress" ColumnName="MailAddress" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Activated" ColumnName="Activated" />
+          <ScalarProperty Name="PeselNumber" ColumnName="PeselNumber" />
+          <ScalarProperty Name="Address" ColumnName="Address" />
+          <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SymptomCathegories">
+      <EntityTypeMapping TypeName="DiseaseDatabaseServerModel.SymptomCathegory">
+        <MappingFragment StoreEntitySet="SymptomCathegories">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ParentCathegory" ColumnName="ParentCathegory" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SymptomRelationTypes">
+      <EntityTypeMapping TypeName="DiseaseDatabaseServerModel.SymptomRelationType">
+        <MappingFragment StoreEntitySet="SymptomRelationTypes">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Symptoms">
+      <EntityTypeMapping TypeName="DiseaseDatabaseServerModel.Symptom">
+        <MappingFragment StoreEntitySet="Symptoms">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="QuickDescription" ColumnName="QuickDescription" />
+          <ScalarProperty Name="SymptomRelationType" ColumnName="SymptomRelationType" />
+          <ScalarProperty Name="SymptomCathegory" ColumnName="SymptomCathegory" />
+          <ScalarProperty Name="GeneralizationDegree" ColumnName="GeneralizationDegree" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>
