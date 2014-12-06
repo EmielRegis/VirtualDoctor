@@ -4,14 +4,14 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="71d526a28d5a45daa2dac46563a212fd" Name="Diagram1">
-        <EntityTypeShape EntityType="DiseaseDatabaseModel.ConcreteSymptomDiseaseConnection" Width="2.125" PointX="2.5" PointY="0.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="DiseaseDatabaseModel.DiseaseCorelation" Width="2" PointX="5" PointY="3.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="DiseaseDatabaseModel.Disease" Width="1.5" PointX="5.25" PointY="0.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="DiseaseDatabaseModel.PatientDiseaseCas" Width="1.625" PointX="7.125" PointY="0.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="DiseaseDatabaseModel.Patient" Width="1.5" PointX="9.25" PointY="0.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="DiseaseDatabaseModel.SymptomCathegory" Width="1.5" PointX="0.5" PointY="3.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="DiseaseDatabaseModel.Symptom" Width="1.5" PointX="0.5" PointY="0.5" IsExpanded="true" />
+      <Diagram DiagramId="faf223aff35a4187a8373434f27ff347" Name="Diagram1">
+        <EntityTypeShape EntityType="DiseaseDatabaseModel.ConcreteSymptomDiseaseConnection" Width="1.5" PointX="3" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DiseaseDatabaseModel.DiseaseCorelation" Width="1.5" PointX="3" PointY="9.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="DiseaseDatabaseModel.Disease" Width="1.5" PointX="0.75" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="DiseaseDatabaseModel.PatientDiseaseCas" Width="1.5" PointX="6" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DiseaseDatabaseModel.Patient" Width="1.5" PointX="3.75" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="DiseaseDatabaseModel.SymptomCathegory" Width="1.5" PointX="1.5" PointY="13.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="DiseaseDatabaseModel.Symptom" Width="1.5" PointX="0.75" PointY="1.25" IsExpanded="true" />
         <AssociationConnector Association="DiseaseDatabaseModel.FK_ConcreteSymptomDiseaseConnections_Diseases" ManuallyRouted="false" />
         <AssociationConnector Association="DiseaseDatabaseModel.FK_ConcreteSymptomDiseaseConnections_Symptoms" ManuallyRouted="false" />
         <AssociationConnector Association="DiseaseDatabaseModel.FK_DiseaseCorelations_DeasesesA" ManuallyRouted="false" />

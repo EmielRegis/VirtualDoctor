@@ -10,8 +10,7 @@
 namespace VirtualDoctor
 {
     using System;
-    using System.Collections.Generic;
-    
+
     public partial class DiseaseCorelation
     {
         public int Id { get; set; }

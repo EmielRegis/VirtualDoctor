@@ -97,6 +97,7 @@
     <Compile Include="PatientDiseaseCas.cs">
       <DependentUpon>DiseaseModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Symptom.cs">
       <DependentUpon>DiseaseModel.tt</DependentUpon>
     </Compile>
@@ -162,6 +163,7 @@
       <LastGenOutput>DiseaseModel.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\Symptom.datasource" />
     <None Include="Properties\DataSources\SymptomCathegory.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
