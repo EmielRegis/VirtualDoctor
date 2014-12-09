@@ -9,18 +9,20 @@
     <Window.Resources>
         <CollectionViewSource  x:Key="symptomCathegoryViewSource" d:DesignSource="{d:DesignInstance {x:Type local:SymptomCathegory}, CreateList=True}"/>
         <CollectionViewSource x:Key="symptomCathegoriesList" d:DesignSource="{d:DesignInstance {x:Type core:String}, CreateList=True}"/>
-        <!--        <local: x:Key="validator"  />-->
+        <CollectionViewSource x:Key="symptomCathegoriesListRemote" d:DesignSource="{d:DesignInstance {x:Type core:String}, CreateList=True}"/>
+        <CollectionViewSource x:Key="symptomViewSource" d:DesignSource="{d:DesignInstance {x:Type local:Symptom}, CreateList=True}"/>
+
     </Window.Resources>
 
     <Grid>
         <Label x:Name="Label1" Content="" HorizontalAlignment="Left" Margin="106,46,0,0" VerticalAlignment="Top" Width="132"/>
         <TabControl HorizontalAlignment="Left" Height="486" Margin="25,29,0,0" VerticalAlignment="Top" Width="727">
-            <TabItem Header="Symptom cathegories">
+            <TabItem x:Name="SymptomCathegoriesTab" Header="Symptom cathegories">
                 <Grid Background="#FFE5E5E5" Margin="2,0,-2,0" DataContext="{StaticResource symptomCathegoryViewSource}" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <DataGrid  x:Name="SymptomCathegoriesDataGrid" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Height="329" Width="426" ItemsSource="{Binding}" AutoGenerateColumns="False" EnableRowVirtualization="True" RowEditEnding="SymptomCathegoryRowUpdate">
+                    <DataGrid  x:Name="SymptomCathegoriesDataGrid" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Height="403" Width="426" ItemsSource="{Binding}" AutoGenerateColumns="False" EnableRowVirtualization="True" RowEditEnding="SymptomCathegoryRowUpdate">
 
                         <DataGrid.RowValidationErrorTemplate>
                             <ControlTemplate>
@@ -44,9 +46,9 @@
                         </DataGrid.RowValidationRules>
 
                         <DataGrid.Columns>
-                            <DataGridTextColumn x:Name="IdColumn"  Binding="{Binding Id }"
-                                                Header="Id:" Width="1*"/>
-                            <DataGridTextColumn x:Name="NameColumn" Binding="{Binding Name }" Header="Name:" Width="4*" />
+                            <DataGridTextColumn x:Name="CathegoryIdColumn"  Binding="{Binding Id }"
+                                                Header="Id:" Width="1*" IsReadOnly="True"/>
+                            <DataGridTextColumn x:Name="Cathegory" Binding="{Binding Name }" Header="Cathegory name:" Width="4*" />
 
                             <DataGridComboBoxColumn x:Name="CathegoryParentColumn" 
                                 SelectedValueBinding="{Binding ParentCathegory}"
@@ -67,12 +69,72 @@
                         </DataGrid.Columns>
                     </DataGrid>
                     <TextBox x:Name="SymptomCathegoriesSearchBox" HorizontalAlignment="Left" Height="23" Margin="70,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="179" TextChanged="SymptomCathegoriesSearchBox_TextChanged"/>
-                    <Label Content="Search:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="SymptomCathegorySearchLabel" Content="Search:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
 
                 </Grid>
             </TabItem>
-            <TabItem Header="Symptoms">
-                <Grid Background="#FFE5E5E5"/>
+
+
+            <!-- ................................................................................. -->
+
+            <TabItem x:Name="SymptomsTab" Header="Symptoms">
+                <Grid Background="#FFE5E5E5" DataContext="{StaticResource symptomViewSource}">
+                    <DataGrid x:Name="SymptomDataGrid" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Height="403" Width="697" ItemsSource="{Binding}" AutoGenerateColumns="False" EnableRowVirtualization="True" RowEditEnding="SymptomRowUpdate" >
+
+
+                        <DataGrid.RowValidationErrorTemplate>
+                            <ControlTemplate>
+                                <Grid Margin="0,-2,0,-2"
+                                    ToolTip="{Binding RelativeSource={RelativeSource
+                                    FindAncestor, AncestorType={x:Type DataGridRow}},
+                                    Path=(Validation.Errors)[0].ErrorContent}">
+                                    <Ellipse StrokeThickness="0" Fill="Red" 
+                                     Width="{TemplateBinding FontSize}" 
+                                    Height="{TemplateBinding FontSize}" />
+                                    <TextBlock Text="!" FontSize="{TemplateBinding FontSize}" 
+                                    FontWeight="Bold" Foreground="White" 
+                                    HorizontalAlignment="Center"  />
+                                </Grid>
+                            </ControlTemplate>
+                        </DataGrid.RowValidationErrorTemplate>
+
+                        <DataGrid.RowValidationRules>
+                            <local:SymptomValidation ValidationStep="UpdatedValue" />
+                        </DataGrid.RowValidationRules>
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="SymptomIdColumn"  Binding="{Binding Id }"
+                                                Header="Id:" Width="1*" IsReadOnly="True"/>
+                            <DataGridTextColumn x:Name="SymptomNameColumn" Binding="{Binding Name }" Header="Symptom name:" Width="4*" />
+
+                            <DataGridTextColumn x:Name="SymptomQuickDescriptionColumn" Binding="{Binding QuickDescription }" Header="Description:" Width="4*" />
+
+                            <DataGridTextColumn x:Name="SymptomGeneralizationDegree"  Binding="{Binding GeneralizationDegree,  TargetNullValue=''}"
+                                                Header="Degree" Width="1*" />
+
+                            <DataGridComboBoxColumn x:Name="SymptomCathegoryColumn" 
+                                SelectedValueBinding="{Binding SymptomCathegory}"
+                                SelectedValuePath="Id"
+                                DisplayMemberPath="Name"
+                               
+                                ItemsSource="{Binding Source={StaticResource symptomCathegoriesListRemote}}"
+                                Header="Cathegory parent:" Width="4*">
+
+                                <DataGridComboBoxColumn.EditingElementStyle>
+                                    <Style TargetType="ComboBox">
+                                        <Setter Property="IsEditable" Value="True" />
+                                    </Style>
+                                </DataGridComboBoxColumn.EditingElementStyle>
+
+                            </DataGridComboBoxColumn>
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <TextBox x:Name="SymptomsSearchBox" HorizontalAlignment="Left" Height="23" Margin="70,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="179" TextChanged="SymptomsSearchBox_TextChanged"/>
+                    <Label x:Name="SymptomSearchLabel" Content="Search:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+
+
+                </Grid>
             </TabItem>
             <TabItem Header="Diseases" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top">
                 <Grid Background="#FFE5E5E5"/>
