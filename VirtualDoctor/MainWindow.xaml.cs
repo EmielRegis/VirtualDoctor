@@ -13,12 +13,14 @@ namespace VirtualDoctor
     /// </summary>
     public partial class MainWindow
     {
-        DiseaseDatabaseEntities dbContextSymptomCathegory;
+        private DiseaseDatabaseEntities dbContextSymptomCathegory;
         private DiseaseDatabaseEntities dbContextSymptom;
+        private DiseaseDatabaseEntities dbContextDisease;
         private CollectionViewSource _symptomCathegoryViewSource;
         private CollectionViewSource _symptomCathegoriesList;
         private CollectionViewSource _symptomViewSource;
         private CollectionViewSource _symptomCathegoriesListRemote;
+        private CollectionViewSource _diseaseViewSource;
 
 
         public MainWindow()
@@ -26,6 +28,7 @@ namespace VirtualDoctor
             InitializeComponent();
             dbContextSymptomCathegory = new DiseaseDatabaseEntities();
             dbContextSymptom = new DiseaseDatabaseEntities();
+            dbContextDisease = new DiseaseDatabaseEntities();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -33,6 +36,7 @@ namespace VirtualDoctor
             dbContextSymptomCathegory.SymptomCathegories.Load();
             dbContextSymptom.Symptoms.Load();
             dbContextSymptom.SymptomCathegories.Load();
+            dbContextDisease.Diseases.Load();
 
             _symptomCathegoryViewSource = ((CollectionViewSource)(FindResource("symptomCathegoryViewSource")));          
             _symptomCathegoryViewSource.Source = dbContextSymptomCathegory.SymptomCathegories.Local;
@@ -45,6 +49,9 @@ namespace VirtualDoctor
 
             _symptomViewSource = ((CollectionViewSource)(FindResource("symptomViewSource")));
             _symptomViewSource.Source = dbContextSymptom.Symptoms.Local;
+
+            _diseaseViewSource = ((CollectionViewSource)(FindResource("diseaseViewSource")));
+            _diseaseViewSource.Source = dbContextDisease.Diseases.Local;
         }
   
         private void SymptomCathegoryRowUpdate(object sender, DataGridRowEditEndingEventArgs dataGridRowEditEndingEventArgs)
@@ -136,6 +143,46 @@ namespace VirtualDoctor
             _symptomViewSource.Filter += SymptomViewSource_Filter;
         }
 
+        private void DiseaseRowUpdate(object sender, DataGridRowEditEndingEventArgs e)
+        {
+            if (DiseaseDataGrid.SelectedItem != null)
+            {
+                DiseaseDataGrid.RowEditEnding -= DiseaseRowUpdate;
+                DiseaseDataGrid.CommitEdit();
+                DiseaseDataGrid.RowEditEnding += DiseaseRowUpdate;
+            }
+            else { return; }
+
+            var result = new DiseaseValidation().Validate(e.Row.BindingGroup, CultureInfo.CurrentCulture);
+
+            if (!result.IsValid)
+            {
+                DiseasesSearchBox.IsEnabled = false;
+                return;
+            }
+
+            DiseasesSearchBox.IsEnabled = true;
+
+            dbContextDisease.SaveChanges();
+            DiseaseDataGrid.Items.Refresh();
+
+        }
+
+        private void DiseaseViewSource_Filter(object sender, FilterEventArgs e)
+        {
+            Disease cat = e.Item as Disease;
+            if (cat != null)
+            {
+                e.Accepted = (cat.Name.Contains(DiseasesSearchBox.Text));
+            }
+        }
+
+        private void DiseasesSearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            _diseaseViewSource.Filter -= DiseaseViewSource_Filter;
+            _diseaseViewSource.Filter += DiseaseViewSource_Filter;
+        }
+
 
     }
 
@@ -183,9 +230,35 @@ namespace VirtualDoctor
 
             if (tempContext.Symptoms.Count(s => (s.Name == symptom.Name) && (s.Id != symptom.Id)) > 0)
             {
-                return new ValidationResult(false, "Cathegory names have to be unique");
+                return new ValidationResult(false, "Symptom names have to be unique");
             }
             
+            return ValidationResult.ValidResult;
+        }
+    }
+
+    public class DiseaseValidation : ValidationRule
+    {
+        public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+        {
+            Disease disease = (value as BindingGroup).Items[0] as Disease;
+            if (disease.Name == null || disease.Name.Length == 0)
+            {
+                return new ValidationResult(false, "The name value can't be empty");
+            }
+
+            if (disease.OccurencesNumber < 0)
+            {
+                return new ValidationResult(false, "Value of occurence number shall be greater or equal 0");
+            }
+
+            DiseaseDatabaseEntities tempContext = new DiseaseDatabaseEntities();
+
+            if (tempContext.Diseases.Count(s => (s.Name == disease.Name) && (s.Id != disease.Id)) > 0)
+            {
+                return new ValidationResult(false, "Disease names have to be unique");
+            }
+
             return ValidationResult.ValidResult;
         }
     }
