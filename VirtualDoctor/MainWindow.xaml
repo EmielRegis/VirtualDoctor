@@ -14,7 +14,10 @@
         <CollectionViewSource x:Key="diseaseViewSource" d:DesignSource="{d:DesignInstance {x:Type local:Disease}, CreateList=True}"/>
         <CollectionViewSource x:Key="diseaseCorelationViewSource" d:DesignSource="{d:DesignInstance {x:Type local:DiseaseCorelation}, CreateList=True}"/>
         <CollectionViewSource x:Key="diseasesListRemote" d:DesignSource="{d:DesignInstance {x:Type core:String}, CreateList=True}"/>
-
+        <CollectionViewSource x:Key="concreteDiseasesListRemote" d:DesignSource="{d:DesignInstance {x:Type core:String}, CreateList=True}"/>
+        <CollectionViewSource x:Key="concreteSymptomsListRemote" d:DesignSource="{d:DesignInstance {x:Type core:String}, CreateList=True}"/>
+        <CollectionViewSource x:Key="concreteSymptomDiseaseConnectionViewSource" d:DesignSource="{d:DesignInstance {x:Type local:ConcreteSymptomDiseaseConnection}, CreateList=True}"/>
+        
     </Window.Resources>
 
     <Grid>
@@ -270,8 +273,96 @@
 
             <!-- ................................................................................. -->
 
-            <TabItem Header="Symptom - disease connection" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top">
-                <Grid Background="#FFE5E5E5"/>
+            <TabItem Header="Symptom - disease connections" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top">
+                <Grid Background="#FFE5E5E5" DataContext="{StaticResource concreteSymptomDiseaseConnectionViewSource}">
+                    <DataGrid x:Name="ConcreteSymptomDiseaseConnectionDataGrid" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Height="403" Width="697" ItemsSource="{Binding}" AutoGenerateColumns="False" EnableRowVirtualization="True" RowEditEnding="ConcreteSymptomDiseaseConnectionRowUpdate" >
+
+
+                        <DataGrid.RowValidationErrorTemplate>
+                            <ControlTemplate>
+                                <Grid Margin="0,-2,0,-2"
+                                    ToolTip="{Binding RelativeSource={RelativeSource
+                                    FindAncestor, AncestorType={x:Type DataGridRow}},
+                                    Path=(Validation.Errors)[0].ErrorContent}">
+                                    <Ellipse StrokeThickness="0" Fill="Red" 
+                                     Width="{TemplateBinding FontSize}" 
+                                    Height="{TemplateBinding FontSize}" />
+                                    <TextBlock Text="!" FontSize="{TemplateBinding FontSize}" 
+                                    FontWeight="Bold" Foreground="White" 
+                                    HorizontalAlignment="Center"  />
+                                </Grid>
+                            </ControlTemplate>
+                        </DataGrid.RowValidationErrorTemplate>
+
+                        <DataGrid.RowValidationRules>
+                            <local:ConcreteSymptomDiseaseConnectionValidation ValidationStep="UpdatedValue" />
+                        </DataGrid.RowValidationRules>
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="ConcreteSymptomDiseaseConnectionIdColumn"  Binding="{Binding Id }"
+                                                Header="Id:" Width="1*" IsReadOnly="True"/>
+
+                            <DataGridComboBoxColumn x:Name="DiseaseColumn" 
+                                SelectedValueBinding="{Binding Disease}"
+                                SelectedValuePath="Id"
+                                DisplayMemberPath="Name"
+                               
+                                ItemsSource="{Binding Source={StaticResource concreteDiseasesListRemote}}"
+                                Header="Disease:" Width="4*">
+
+                                <DataGridComboBoxColumn.EditingElementStyle>
+                                    <Style TargetType="ComboBox">
+                                        <Setter Property="IsEditable" Value="True" />
+                                    </Style>
+                                </DataGridComboBoxColumn.EditingElementStyle>
+
+                            </DataGridComboBoxColumn>
+
+                            <DataGridComboBoxColumn x:Name="SymptomColumn" 
+                                SelectedValueBinding="{Binding Symptom}"
+                                SelectedValuePath="Id"
+                                DisplayMemberPath="Name"
+                               
+                                ItemsSource="{Binding Source={StaticResource concreteSymptomsListRemote}}"
+                                Header="Symptom:" Width="4*">
+
+                                <DataGridComboBoxColumn.EditingElementStyle>
+                                    <Style TargetType="ComboBox">
+                                        <Setter Property="IsEditable" Value="True" />
+                                    </Style>
+                                </DataGridComboBoxColumn.EditingElementStyle>
+
+                            </DataGridComboBoxColumn>
+
+
+                            <DataGridTextColumn x:Name="ProbabilisticEvaluationCasesColumn"  Binding="{Binding ProbabilisticEvaluation,  TargetNullValue=0.0}"
+                                                Header="Evaluation:" Width="1*" />
+
+                            <DataGridTextColumn x:Name="SDConnectionOcurrenceNumberColumn"  Binding="{Binding OccurencesNumber,  TargetNullValue=0}"
+                                                Header="Occurence:" Width="1*" />
+
+                            <DataGridTextColumn x:Name="YesColumn"  Binding="{Binding YesAnswers,  TargetNullValue=0}"
+                                                Header="Yes:" Width="1*" />
+
+                            <DataGridTextColumn x:Name="ProbablyYesAnswersColumn"  Binding="{Binding ProbablyYesAnswers,  TargetNullValue=0}"
+                                                Header="Probably yes:" Width="1*" />
+
+                            <DataGridTextColumn x:Name="DontKnowAnswersColumn"  Binding="{Binding DontKnowAnswers,  TargetNullValue=0}"
+                                                Header="Don't know:" Width="1*" />
+
+                            <DataGridTextColumn x:Name="ProbablyNotAnswersColumn"  Binding="{Binding ProbablyNotAnswers,  TargetNullValue=0}"
+                                                Header="Probably not:" Width="1*" />
+
+                            <DataGridTextColumn x:Name="NotAnswersColumn"  Binding="{Binding NotAnswers,  TargetNullValue=0}"
+                                                Header="Not:" Width="1*" />
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <TextBox x:Name="ConcreteSymptomDiseaseConnectionsSearchBox" HorizontalAlignment="Left" Height="23" Margin="70,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="179" TextChanged="ConcreteSymptomDiseaseConnectionsSearchBox_TextChanged"/>
+                    <Label x:Name="ConcreteSymptomDiseaseConnectionsSymptomSearchLabel" Content="Search:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+
+
+                </Grid>
             </TabItem>
             
         </TabControl>
