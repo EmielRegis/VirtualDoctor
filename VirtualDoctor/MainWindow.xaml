@@ -12,6 +12,8 @@
         <CollectionViewSource x:Key="symptomCathegoriesListRemote" d:DesignSource="{d:DesignInstance {x:Type core:String}, CreateList=True}"/>
         <CollectionViewSource x:Key="symptomViewSource" d:DesignSource="{d:DesignInstance {x:Type local:Symptom}, CreateList=True}"/>
         <CollectionViewSource x:Key="diseaseViewSource" d:DesignSource="{d:DesignInstance {x:Type local:Disease}, CreateList=True}"/>
+        <CollectionViewSource x:Key="diseaseCorelationViewSource" d:DesignSource="{d:DesignInstance {x:Type local:DiseaseCorelation}, CreateList=True}"/>
+        <CollectionViewSource x:Key="diseasesListRemote" d:DesignSource="{d:DesignInstance {x:Type core:String}, CreateList=True}"/>
 
     </Window.Resources>
 
@@ -111,7 +113,7 @@
                             <DataGridTextColumn x:Name="SymptomQuickDescriptionColumn" Binding="{Binding QuickDescription }" Header="Description:" Width="4*" />
 
                             <DataGridTextColumn x:Name="SymptomGeneralizationDegree"  Binding="{Binding GeneralizationDegree,  TargetNullValue=''}"
-                                                Header="Degree" Width="1*" />
+                                                Header="Degree:" Width="1*" />
 
                             <DataGridComboBoxColumn x:Name="SymptomCathegoryColumn" 
                                 SelectedValueBinding="{Binding SymptomCathegory}"
@@ -119,7 +121,7 @@
                                 DisplayMemberPath="Name"
                                
                                 ItemsSource="{Binding Source={StaticResource symptomCathegoriesListRemote}}"
-                                Header="Cathegory parent:" Width="4*">
+                                Header="Cathegory:" Width="4*">
 
                                 <DataGridComboBoxColumn.EditingElementStyle>
                                     <Style TargetType="ComboBox">
@@ -140,7 +142,7 @@
 
             <!-- ................................................................................. -->
 
-            <TabItem Header="Diseases" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top">
+            <TabItem Header="Diseases" HorizontalAlignment="Left" Margin="-2,-2,0,2">
                 <Grid Background="#FFE5E5E5" DataContext="{StaticResource diseaseViewSource}">
                     <DataGrid x:Name="DiseaseDataGrid" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Height="403" Width="697" ItemsSource="{Binding}" AutoGenerateColumns="False" EnableRowVirtualization="True" RowEditEnding="DiseaseRowUpdate" >
 
@@ -168,7 +170,7 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn x:Name="DiseaseIdColumn"  Binding="{Binding Id }"
                                                 Header="Id:" Width="1*" IsReadOnly="True"/>
-                            <DataGridTextColumn x:Name="DiseaseNameColumn" Binding="{Binding Name }" Header="Disease name:" Width="4*" />
+                            <DataGridTextColumn x:Name="DiseaseNameColumn" Binding="{Binding Name }" Header="Name:" Width="4*" />
 
                             <DataGridTextColumn x:Name="DiseaseDescriptionColumn" Binding="{Binding Description }" Header="Description:" Width="6*" />
 
@@ -186,8 +188,84 @@
 
             <!-- ................................................................................. -->
 
-            <TabItem Header="Disease corelation" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top">
-                <Grid Background="#FFE5E5E5"/>
+            <TabItem Header="Disease corelations" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top">
+                <Grid Background="#FFE5E5E5" DataContext="{StaticResource diseaseCorelationViewSource}">
+                    <DataGrid x:Name="DiseaseCorelationDataGrid" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Height="403" Width="697" ItemsSource="{Binding}" AutoGenerateColumns="False" EnableRowVirtualization="True" RowEditEnding="DiseaseCorelationRowUpdate" >
+
+
+                        <DataGrid.RowValidationErrorTemplate>
+                            <ControlTemplate>
+                                <Grid Margin="0,-2,0,-2"
+                                    ToolTip="{Binding RelativeSource={RelativeSource
+                                    FindAncestor, AncestorType={x:Type DataGridRow}},
+                                    Path=(Validation.Errors)[0].ErrorContent}">
+                                    <Ellipse StrokeThickness="0" Fill="Red" 
+                                     Width="{TemplateBinding FontSize}" 
+                                    Height="{TemplateBinding FontSize}" />
+                                    <TextBlock Text="!" FontSize="{TemplateBinding FontSize}" 
+                                    FontWeight="Bold" Foreground="White" 
+                                    HorizontalAlignment="Center"  />
+                                </Grid>
+                            </ControlTemplate>
+                        </DataGrid.RowValidationErrorTemplate>
+
+                        <DataGrid.RowValidationRules>
+                            <local:DiseaseCorelationValidation ValidationStep="UpdatedValue" />
+                        </DataGrid.RowValidationRules>
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="DiseaseCorelationIdColumn"  Binding="{Binding Id }"
+                                                Header="Id:" Width="1*" IsReadOnly="True"/>
+                                                
+                            <DataGridComboBoxColumn x:Name="DiseaseAColumn" 
+                                SelectedValueBinding="{Binding DiseaseA}"
+                                SelectedValuePath="Id"
+                                DisplayMemberPath="Name"
+                               
+                                ItemsSource="{Binding Source={StaticResource diseasesListRemote}}"
+                                Header="Disease:" Width="4*">
+
+                                <DataGridComboBoxColumn.EditingElementStyle>
+                                    <Style TargetType="ComboBox">
+                                        <Setter Property="IsEditable" Value="True" />
+                                    </Style>
+                                </DataGridComboBoxColumn.EditingElementStyle>
+
+                            </DataGridComboBoxColumn>
+
+                            <DataGridComboBoxColumn x:Name="DiseaseBColumn" 
+                                SelectedValueBinding="{Binding DiseaseB}"
+                                SelectedValuePath="Id"
+                                DisplayMemberPath="Name"
+                               
+                                ItemsSource="{Binding Source={StaticResource diseasesListRemote}}"
+                                Header="Disease:" Width="4*">
+
+                                <DataGridComboBoxColumn.EditingElementStyle>
+                                    <Style TargetType="ComboBox">
+                                        <Setter Property="IsEditable" Value="True" />
+                                    </Style>
+                                </DataGridComboBoxColumn.EditingElementStyle>
+
+                            </DataGridComboBoxColumn>
+
+
+                            <DataGridTextColumn x:Name="CommonCasesColumn"  Binding="{Binding CommonCases,  TargetNullValue=0}"
+                                                Header="Common:" Width="1*" />
+
+                            <DataGridTextColumn x:Name="CorelationPowerColumn"  Binding="{Binding CorelationPower,  TargetNullValue=0}"
+                                                Header="Power:" Width="1*" />
+
+                            <DataGridTextColumn x:Name="CorelationDirectionColumn"  Binding="{Binding CorelationDirection,  TargetNullValue=0}"
+                                                Header="Direction:" Width="1*" />
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <TextBox x:Name="DiseaseCorelationsSearchBox" HorizontalAlignment="Left" Height="23" Margin="70,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="179" TextChanged="DiseaseCorelationsSearchBox_TextChanged"/>
+                    <Label x:Name="DiseaseCorelationsSymptomSearchLabel" Content="Search:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+
+
+                </Grid>
             </TabItem>
 
             <!-- ................................................................................. -->
