@@ -10,7 +10,8 @@
 namespace VirtualDoctor
 {
     using System;
-
+    using System.Collections.Generic;
+    
     public partial class ConcreteSymptomDiseaseConnection
     {
         public int Id { get; set; }

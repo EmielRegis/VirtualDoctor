@@ -22,13 +22,13 @@
 
     <Grid>
         <Label x:Name="Label1" Content="" HorizontalAlignment="Left" Margin="106,46,0,0" VerticalAlignment="Top" Width="132"/>
-        <TabControl HorizontalAlignment="Left" Height="486" Margin="25,29,0,0" VerticalAlignment="Top" Width="727">
+        <TabControl x:Name="TControl" HorizontalAlignment="Left" Height="486" Margin="25,29,0,0" VerticalAlignment="Top" Width="727" SelectionChanged="Selector_OnSelectionChanged">
             <TabItem x:Name="SymptomCathegoriesTab" Header="Symptom cathegories">
                 <Grid Background="#FFE5E5E5" Margin="2,0,-2,0" DataContext="{StaticResource symptomCathegoryViewSource}" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <DataGrid  x:Name="SymptomCathegoriesDataGrid" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Height="403" Width="426" ItemsSource="{Binding}" AutoGenerateColumns="False" EnableRowVirtualization="True" RowEditEnding="SymptomCathegoryRowUpdate">
+                    <DataGrid  x:Name="SymptomCathegoriesDataGrid" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Height="403" Width="426" ItemsSource="{Binding}" AutoGenerateColumns="False" EnableRowVirtualization="True" RowEditEnding="SymptomCathegoryRowUpdate" BeginningEdit="SymptomCathegoriesDataGrid_OnBeginningEdit">
 
                         <DataGrid.RowValidationErrorTemplate>
                             <ControlTemplate>
@@ -83,9 +83,9 @@
 
             <!-- ................................................................................. -->
 
-            <TabItem x:Name="SymptomsTab" Header="Symptoms">
+            <TabItem x:Name="SymptomsTab" Header="Symptoms" >
                 <Grid Background="#FFE5E5E5" DataContext="{StaticResource symptomViewSource}">
-                    <DataGrid x:Name="SymptomDataGrid" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Height="403" Width="697" ItemsSource="{Binding}" AutoGenerateColumns="False" EnableRowVirtualization="True" RowEditEnding="SymptomRowUpdate" >
+                    <DataGrid x:Name="SymptomDataGrid" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Height="403" Width="697" ItemsSource="{Binding}" AutoGenerateColumns="False" EnableRowVirtualization="True" RowEditEnding="SymptomRowUpdate" BeginningEdit="SymptomDataGrid_OnBeginningEdit">
 
 
                         <DataGrid.RowValidationErrorTemplate>
@@ -145,9 +145,9 @@
 
             <!-- ................................................................................. -->
 
-            <TabItem Header="Diseases" HorizontalAlignment="Left" Margin="-2,-2,0,2">
+            <TabItem x:Name="DiseasesTab" Header="Diseases" HorizontalAlignment="Left" Margin="-2,-2,0,2">
                 <Grid Background="#FFE5E5E5" DataContext="{StaticResource diseaseViewSource}">
-                    <DataGrid x:Name="DiseaseDataGrid" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Height="403" Width="697" ItemsSource="{Binding}" AutoGenerateColumns="False" EnableRowVirtualization="True" RowEditEnding="DiseaseRowUpdate" >
+                    <DataGrid x:Name="DiseaseDataGrid" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Height="403" Width="697" ItemsSource="{Binding}" AutoGenerateColumns="False" EnableRowVirtualization="True" RowEditEnding="DiseaseRowUpdate" BeginningEdit="DiseaseDataGrid_OnBeginningEdit" >
 
 
                         <DataGrid.RowValidationErrorTemplate>
@@ -191,9 +191,9 @@
 
             <!-- ................................................................................. -->
 
-            <TabItem Header="Disease corelations" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top">
+            <TabItem x:Name="DiseaseCorelationsTab" Header="Disease corelations" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top">
                 <Grid Background="#FFE5E5E5" DataContext="{StaticResource diseaseCorelationViewSource}">
-                    <DataGrid x:Name="DiseaseCorelationDataGrid" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Height="403" Width="697" ItemsSource="{Binding}" AutoGenerateColumns="False" EnableRowVirtualization="True" RowEditEnding="DiseaseCorelationRowUpdate" >
+                    <DataGrid x:Name="DiseaseCorelationDataGrid" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Height="403" Width="697" ItemsSource="{Binding}" AutoGenerateColumns="False" EnableRowVirtualization="True" RowEditEnding="DiseaseCorelationRowUpdate" BeginningEdit="DiseaseCorelationDataGrid_OnBeginningEdit">
 
 
                         <DataGrid.RowValidationErrorTemplate>
@@ -273,9 +273,9 @@
 
             <!-- ................................................................................. -->
 
-            <TabItem Header="Symptom - disease connections" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top">
+            <TabItem x:Name="ConcreteSymptomDiseaseConnectionTab" Header="Symptom - disease connections" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top">
                 <Grid Background="#FFE5E5E5" DataContext="{StaticResource concreteSymptomDiseaseConnectionViewSource}">
-                    <DataGrid x:Name="ConcreteSymptomDiseaseConnectionDataGrid" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Height="403" Width="697" ItemsSource="{Binding}" AutoGenerateColumns="False" EnableRowVirtualization="True" RowEditEnding="ConcreteSymptomDiseaseConnectionRowUpdate" >
+                    <DataGrid x:Name="ConcreteSymptomDiseaseConnectionDataGrid" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Height="403" Width="697" ItemsSource="{Binding}" AutoGenerateColumns="False" EnableRowVirtualization="True" RowEditEnding="ConcreteSymptomDiseaseConnectionRowUpdate" BeginningEdit="ConcreteSymptomDiseaseConnectionDataGrid_OnBeginningEdit">
 
 
                         <DataGrid.RowValidationErrorTemplate>
@@ -366,6 +366,8 @@
             </TabItem>
             
         </TabControl>
+        <Label x:Name="QuickDescriptionLabel" Content="" HorizontalAlignment="Left" Margin="827,72,0,0" VerticalAlignment="Top" Width="157"/>
+        <Button x:Name="RefreshButton" Content="Refresh base" Click="RefreshButton_OnClick" HorizontalAlignment="Left" Margin="865,120,0,0" VerticalAlignment="Top" Width="75"/>
 
     </Grid>
 

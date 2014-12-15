@@ -1,9 +1,17 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Core.EntityClient;
+//using System.Data.Entity.Core.Metadata.Edm;
+using System.Data.Entity.Core.Objects.DataClasses;
+using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Documents;
 using ValidationResult = System.Windows.Controls.ValidationResult;
 
 namespace VirtualDoctor
@@ -29,6 +37,15 @@ namespace VirtualDoctor
         private CollectionViewSource _concreteSymptomsListRemote;
         private CollectionViewSource _concreteSymptomDiseaseConnectionViewSource;
 
+        private bool symptomCathegoryFlag = false;
+        private bool symptomFlag = false;
+        private bool diseaseFlag = false;
+        private bool diseaseCorelationFlag = false;
+        private bool concreteSymptomDiseaseConnectionFlag = false;
+
+
+
+
 
         public MainWindow()
         {
@@ -53,50 +70,62 @@ namespace VirtualDoctor
             dbContextConcreteSymptomDiseaseConnection.Symptoms.Load();
 
 
-            _symptomCathegoryViewSource = ((CollectionViewSource)(FindResource("symptomCathegoryViewSource")));          
+            _symptomCathegoryViewSource = ((CollectionViewSource) (FindResource("symptomCathegoryViewSource")));
             _symptomCathegoryViewSource.Source = dbContextSymptomCathegory.SymptomCathegories.Local;
 
-            _symptomCathegoriesList = ((CollectionViewSource)(FindResource("symptomCathegoriesList")));
+            _symptomCathegoriesList = ((CollectionViewSource) (FindResource("symptomCathegoriesList")));
             _symptomCathegoriesList.Source = dbContextSymptomCathegory.SymptomCathegories.Local;
 
-            _symptomCathegoriesListRemote = ((CollectionViewSource)(FindResource("symptomCathegoriesListRemote")));
+            _symptomCathegoriesListRemote = ((CollectionViewSource) (FindResource("symptomCathegoriesListRemote")));
             _symptomCathegoriesListRemote.Source = dbContextSymptom.SymptomCathegories.Local;
 
-            _symptomViewSource = ((CollectionViewSource)(FindResource("symptomViewSource")));
+            _symptomViewSource = ((CollectionViewSource) (FindResource("symptomViewSource")));
             _symptomViewSource.Source = dbContextSymptom.Symptoms.Local;
 
-            _diseaseViewSource = ((CollectionViewSource)(FindResource("diseaseViewSource")));
+            _diseaseViewSource = ((CollectionViewSource) (FindResource("diseaseViewSource")));
             _diseaseViewSource.Source = dbContextDisease.Diseases.Local;
 
-            _diseaseCorelationViewSource = ((CollectionViewSource)(FindResource("diseaseCorelationViewSource")));
+            _diseaseCorelationViewSource = ((CollectionViewSource) (FindResource("diseaseCorelationViewSource")));
             _diseaseCorelationViewSource.Source = dbContextDiseaseCorelation.DiseaseCorelations.Local;
 
-            _diseasesListRemote = ((CollectionViewSource)(FindResource("diseasesListRemote")));
+            _diseasesListRemote = ((CollectionViewSource) (FindResource("diseasesListRemote")));
             _diseasesListRemote.Source = dbContextDiseaseCorelation.Diseases.Local;
 
-            _concreteSymptomDiseaseConnectionViewSource = ((CollectionViewSource)(FindResource("concreteSymptomDiseaseConnectionViewSource")));
-            _concreteSymptomDiseaseConnectionViewSource.Source = dbContextConcreteSymptomDiseaseConnection.ConcreteSymptomDiseaseConnections.Local;
+            _concreteSymptomDiseaseConnectionViewSource =
+                ((CollectionViewSource) (FindResource("concreteSymptomDiseaseConnectionViewSource")));
+            _concreteSymptomDiseaseConnectionViewSource.Source =
+                dbContextConcreteSymptomDiseaseConnection.ConcreteSymptomDiseaseConnections.Local;
 
-            _concreteDiseasesListRemote = ((CollectionViewSource)(FindResource("concreteDiseasesListRemote")));
+            _concreteDiseasesListRemote = ((CollectionViewSource) (FindResource("concreteDiseasesListRemote")));
             _concreteDiseasesListRemote.Source = dbContextConcreteSymptomDiseaseConnection.Diseases.Local;
 
-            _concreteSymptomsListRemote = ((CollectionViewSource)(FindResource("concreteSymptomsListRemote")));
+            _concreteSymptomsListRemote = ((CollectionViewSource) (FindResource("concreteSymptomsListRemote")));
             _concreteSymptomsListRemote.Source = dbContextConcreteSymptomDiseaseConnection.Symptoms.Local;
+
+
+            var context = new DiseaseDatabaseEntities();
+            context.Diseases.Select(s => new {stat = QuickStatistics()}).Take(1).ToList()
+                .ForEach(
+                    d => QuickDescriptionLabel.Content = "In database are: " + Convert.ToString(d.stat) + " diseases.");
         }
-  
-        private void SymptomCathegoryRowUpdate(object sender, DataGridRowEditEndingEventArgs dataGridRowEditEndingEventArgs)
-        {   
+
+        private void SymptomCathegoryRowUpdate(object sender,
+            DataGridRowEditEndingEventArgs dataGridRowEditEndingEventArgs)
+        {
             if (SymptomCathegoriesDataGrid.SelectedItem != null)
-            {                
+            {
                 SymptomCathegoriesDataGrid.RowEditEnding -= SymptomCathegoryRowUpdate;
-                SymptomCathegoriesDataGrid.CommitEdit();               
-//                (sender as DataGrid).Items.Refresh();
+                SymptomCathegoriesDataGrid.CommitEdit();
                 SymptomCathegoriesDataGrid.RowEditEnding += SymptomCathegoryRowUpdate;
             }
-            else {return;}
+            else
+            {
+                return;
+            }
 
-            var result = new SymptomCathegoryValidation().Validate(dataGridRowEditEndingEventArgs.Row.BindingGroup, CultureInfo.CurrentCulture);
-            
+            var result = new SymptomCathegoryValidation().Validate(dataGridRowEditEndingEventArgs.Row.BindingGroup,
+                CultureInfo.CurrentCulture);
+
             if (!result.IsValid)
             {
                 SymptomCathegoriesSearchBox.IsEnabled = false;
@@ -109,10 +138,15 @@ namespace VirtualDoctor
 
             dbContextSymptom = new DiseaseDatabaseEntities();
             dbContextSymptom.SymptomCathegories.Load();
+            dbContextSymptom.Symptoms.Load();
             _symptomCathegoriesListRemote.Source = dbContextSymptom.SymptomCathegories.Local;
+            _symptomViewSource.Source = dbContextSymptom.Symptoms.Local;
             SymptomDataGrid.Items.Refresh();
 
             SymptomCathegoriesDataGrid.Items.Refresh();
+
+
+            symptomCathegoryFlag = false;
         }
 
 
@@ -122,7 +156,7 @@ namespace VirtualDoctor
             SymptomCathegory cat = e.Item as SymptomCathegory;
             if (cat != null)
             {
-                e.Accepted = (cat.Name.Contains(SymptomCathegoriesSearchBox.Text));
+                e.Accepted = (cat.Name.ToUpper().Contains(SymptomCathegoriesSearchBox.Text.ToUpper()));
             }
         }
 
@@ -132,7 +166,7 @@ namespace VirtualDoctor
             _symptomCathegoryViewSource.Filter += SymptomCathegoryViewSource_Filter;
         }
 
-       
+
 
         private void SymptomRowUpdate(object sender, DataGridRowEditEndingEventArgs e)
         {
@@ -142,7 +176,10 @@ namespace VirtualDoctor
                 SymptomDataGrid.CommitEdit();
                 SymptomDataGrid.RowEditEnding += SymptomRowUpdate;
             }
-            else { return; }
+            else
+            {
+                return;
+            }
 
             var result = new SymptomValidation().Validate(e.Row.BindingGroup, CultureInfo.CurrentCulture);
 
@@ -158,10 +195,15 @@ namespace VirtualDoctor
 
             dbContextConcreteSymptomDiseaseConnection = new DiseaseDatabaseEntities();
             dbContextConcreteSymptomDiseaseConnection.Symptoms.Load();
+            dbContextConcreteSymptomDiseaseConnection.ConcreteSymptomDiseaseConnections.Load();
             _concreteSymptomsListRemote.Source = dbContextConcreteSymptomDiseaseConnection.Symptoms.Local;
+            _concreteSymptomDiseaseConnectionViewSource.Source =
+                dbContextConcreteSymptomDiseaseConnection.ConcreteSymptomDiseaseConnections.Local;
             ConcreteSymptomDiseaseConnectionDataGrid.Items.Refresh();
 
             SymptomDataGrid.Items.Refresh();
+
+            symptomFlag = false;
 
         }
 
@@ -170,7 +212,7 @@ namespace VirtualDoctor
             Symptom cat = e.Item as Symptom;
             if (cat != null)
             {
-                e.Accepted = (cat.Name.Contains(SymptomsSearchBox.Text));
+                e.Accepted = (cat.Name.ToUpper().Contains(SymptomsSearchBox.Text.ToUpper()));
             }
         }
 
@@ -188,7 +230,10 @@ namespace VirtualDoctor
                 DiseaseDataGrid.CommitEdit();
                 DiseaseDataGrid.RowEditEnding += DiseaseRowUpdate;
             }
-            else { return; }
+            else
+            {
+                return;
+            }
 
             var result = new DiseaseValidation().Validate(e.Row.BindingGroup, CultureInfo.CurrentCulture);
 
@@ -204,15 +249,27 @@ namespace VirtualDoctor
 
             dbContextDiseaseCorelation = new DiseaseDatabaseEntities();
             dbContextDiseaseCorelation.Diseases.Load();
+            dbContextDiseaseCorelation.DiseaseCorelations.Load();
             _diseasesListRemote.Source = dbContextDiseaseCorelation.Diseases.Local;
+            _diseaseCorelationViewSource.Source = dbContextDiseaseCorelation.DiseaseCorelations.Local;
             DiseaseCorelationDataGrid.Items.Refresh();
 
             dbContextConcreteSymptomDiseaseConnection = new DiseaseDatabaseEntities();
             dbContextConcreteSymptomDiseaseConnection.Diseases.Load();
+            dbContextConcreteSymptomDiseaseConnection.ConcreteSymptomDiseaseConnections.Load();
             _concreteDiseasesListRemote.Source = dbContextConcreteSymptomDiseaseConnection.Diseases.Local;
+            _concreteSymptomDiseaseConnectionViewSource.Source =
+                dbContextConcreteSymptomDiseaseConnection.ConcreteSymptomDiseaseConnections.Local;
             ConcreteSymptomDiseaseConnectionDataGrid.Items.Refresh();
 
             DiseaseDataGrid.Items.Refresh();
+
+            var context = new DiseaseDatabaseEntities();
+            context.Diseases.Select(s => new {stat = QuickStatistics()}).Take(1).ToList()
+                .ForEach(
+                    d => QuickDescriptionLabel.Content = "In database are: " + Convert.ToString(d.stat) + " diseases.");
+
+            diseaseFlag = false;
 
         }
 
@@ -221,7 +278,7 @@ namespace VirtualDoctor
             Disease cat = e.Item as Disease;
             if (cat != null)
             {
-                e.Accepted = (cat.Name.Contains(DiseasesSearchBox.Text));
+                e.Accepted = (cat.Name.ToUpper().Contains(DiseasesSearchBox.Text.ToUpper()));
             }
         }
 
@@ -239,7 +296,10 @@ namespace VirtualDoctor
                 DiseaseCorelationDataGrid.CommitEdit();
                 DiseaseCorelationDataGrid.RowEditEnding += DiseaseCorelationRowUpdate;
             }
-            else { return; }
+            else
+            {
+                return;
+            }
 
             var result = new DiseaseCorelationValidation().Validate(e.Row.BindingGroup, CultureInfo.CurrentCulture);
 
@@ -253,9 +313,11 @@ namespace VirtualDoctor
 
             dbContextDiseaseCorelation.SaveChanges();
 
-            
+
 
             DiseaseCorelationDataGrid.Items.Refresh();
+
+            diseaseCorelationFlag = false;
 
         }
 
@@ -266,9 +328,9 @@ namespace VirtualDoctor
             {
                 e.Accepted =
                     (dbContextDiseaseCorelation.Diseases.First(s => s.Id == cat.DiseaseA)
-                        .Name.Contains(DiseaseCorelationsSearchBox.Text)) ||
+                        .Name.ToUpper().Contains(DiseaseCorelationsSearchBox.Text.ToUpper())) ||
                     (dbContextDiseaseCorelation.Diseases.First(s => s.Id == cat.DiseaseB)
-                        .Name.Contains(DiseaseCorelationsSearchBox.Text));
+                        .Name.ToUpper().Contains(DiseaseCorelationsSearchBox.Text.ToUpper()));
             }
         }
 
@@ -288,9 +350,13 @@ namespace VirtualDoctor
                 ConcreteSymptomDiseaseConnectionDataGrid.CommitEdit();
                 ConcreteSymptomDiseaseConnectionDataGrid.RowEditEnding += ConcreteSymptomDiseaseConnectionRowUpdate;
             }
-            else { return; }
+            else
+            {
+                return;
+            }
 
-            var result = new ConcreteSymptomDiseaseConnectionValidation().Validate(e.Row.BindingGroup, CultureInfo.CurrentCulture);
+            var result = new ConcreteSymptomDiseaseConnectionValidation().Validate(e.Row.BindingGroup,
+                CultureInfo.CurrentCulture);
 
             if (!result.IsValid)
             {
@@ -304,6 +370,8 @@ namespace VirtualDoctor
 
             ConcreteSymptomDiseaseConnectionDataGrid.Items.Refresh();
 
+            concreteSymptomDiseaseConnectionFlag = false;
+
         }
 
         private void ConcreteSymptomDiseaseConnectionViewSource_Filter(object sender, FilterEventArgs e)
@@ -313,9 +381,9 @@ namespace VirtualDoctor
             {
                 e.Accepted =
                     (dbContextConcreteSymptomDiseaseConnection.Diseases.First(d => d.Id == cat.Disease)
-                        .Name.Contains(DiseaseCorelationsSearchBox.Text)) ||
+                        .Name.ToUpper().Contains(DiseaseCorelationsSearchBox.Text.ToUpper())) ||
                     (dbContextConcreteSymptomDiseaseConnection.Symptoms.First(s => s.Id == cat.Symptom)
-                        .Name.Contains(DiseaseCorelationsSearchBox.Text));
+                        .Name.ToUpper().Contains(DiseaseCorelationsSearchBox.Text.ToUpper()));
             }
         }
 
@@ -325,7 +393,166 @@ namespace VirtualDoctor
             _concreteSymptomDiseaseConnectionViewSource.Filter += ConcreteSymptomDiseaseConnectionViewSource_Filter;
         }
 
+        private void view_CurrentChanged(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
 
+        private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if ((!(e.Source is TabControl)) || e.RemovedItems.Count == 0 || e.AddedItems.Count == 0)
+            {
+//                SymptomDataGrid.
+                return;
+            }
+
+            if (SymptomsTab.IsSelected)
+            {
+                if (!symptomCathegoryFlag)
+                {
+                    dbContextSymptomCathegory.SaveChanges();
+
+                    dbContextSymptom = new DiseaseDatabaseEntities();
+                    dbContextSymptom.SymptomCathegories.Load();
+                    dbContextSymptom.Symptoms.Load();
+                    _symptomCathegoriesListRemote.Source = dbContextSymptom.SymptomCathegories.Local;
+                    _symptomViewSource.Source = dbContextSymptom.Symptoms.Local;
+                    SymptomDataGrid.Items.Refresh();
+                }
+            }
+            else if (DiseaseCorelationsTab.IsSelected)
+            {
+                if (!diseaseFlag)
+                {
+                    dbContextDisease.SaveChanges();
+
+                    dbContextDiseaseCorelation = new DiseaseDatabaseEntities();
+                    dbContextDiseaseCorelation.Diseases.Load();
+                    dbContextDiseaseCorelation.DiseaseCorelations.Load();
+                    _diseasesListRemote.Source = dbContextDiseaseCorelation.Diseases.Local;
+                    _diseaseCorelationViewSource.Source = dbContextDiseaseCorelation.DiseaseCorelations.Local;
+                    DiseaseCorelationDataGrid.Items.Refresh();
+                }
+            }
+            else if (ConcreteSymptomDiseaseConnectionTab.IsSelected)
+            {
+                if (!symptomFlag)
+                {
+                    dbContextSymptom.SaveChanges();
+
+                    dbContextConcreteSymptomDiseaseConnection = new DiseaseDatabaseEntities();
+                    dbContextConcreteSymptomDiseaseConnection.Symptoms.Load();
+                    dbContextConcreteSymptomDiseaseConnection.ConcreteSymptomDiseaseConnections.Load();
+                    _concreteSymptomsListRemote.Source = dbContextConcreteSymptomDiseaseConnection.Symptoms.Local;
+                    _concreteSymptomDiseaseConnectionViewSource.Source =
+                        dbContextConcreteSymptomDiseaseConnection.ConcreteSymptomDiseaseConnections.Local;
+                    ConcreteSymptomDiseaseConnectionDataGrid.Items.Refresh();
+                }
+
+                if (!diseaseFlag)
+                {
+                    dbContextDisease.SaveChanges();
+
+                    dbContextConcreteSymptomDiseaseConnection = new DiseaseDatabaseEntities();
+                    dbContextConcreteSymptomDiseaseConnection.Diseases.Load();
+                    dbContextConcreteSymptomDiseaseConnection.ConcreteSymptomDiseaseConnections.Load();
+                    _concreteDiseasesListRemote.Source = dbContextConcreteSymptomDiseaseConnection.Diseases.Local;
+                    _concreteSymptomDiseaseConnectionViewSource.Source =
+                        dbContextConcreteSymptomDiseaseConnection.ConcreteSymptomDiseaseConnections.Local;
+                    ConcreteSymptomDiseaseConnectionDataGrid.Items.Refresh();
+                }
+            }
+        }
+
+        private void SymptomDataGrid_OnBeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+        {
+            symptomFlag = true;
+        }
+
+        private void DiseaseCorelationDataGrid_OnBeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+        {
+            diseaseCorelationFlag = true;
+        }
+
+        private void ConcreteSymptomDiseaseConnectionDataGrid_OnBeginningEdit(object sender,
+            DataGridBeginningEditEventArgs e)
+        {
+            concreteSymptomDiseaseConnectionFlag = true;
+        }
+
+        private void SymptomCathegoriesDataGrid_OnBeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+        {
+            symptomCathegoryFlag = true;
+
+        }
+
+        private void DiseaseDataGrid_OnBeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+        {
+            diseaseFlag = true;
+        }
+
+        [EdmFunction("DiseaseDatabaseModel.Store", "QuickStatistics")]
+        public static Int32? QuickStatistics()
+        {
+            throw new NotSupportedException();
+        }
+
+        private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            
+
+                if (!symptomCathegoryFlag)
+                {
+                    dbContextSymptomCathegory.SaveChanges();
+//                    dbContextSymptomCathegory = new DiseaseDatabaseEntities();
+//                    dbContextSymptomCathegory.SymptomCathegories.Load();
+//                    _symptomCathegoryViewSource.Source = dbContextSymptomCathegory.SymptomCathegories.Local;
+//                    SymptomCathegoriesDataGrid.Items.Refresh();
+                }
+
+                if (!symptomFlag)
+                {
+                    dbContextSymptom.SaveChanges();
+//                    dbContextSymptom = new DiseaseDatabaseEntities();
+//                    dbContextSymptom.Symptoms.Load();
+//                    _symptomViewSource.Source = dbContextSymptom.Symptoms.Local;
+//                    SymptomDataGrid.Items.Refresh();
+                }
+
+                if (!diseaseFlag)
+                {
+                    dbContextDisease.SaveChanges();
+//                    dbContextDisease = new DiseaseDatabaseEntities();
+//                    dbContextDisease.Diseases.Load();
+//                    _diseaseViewSource.Source = dbContextDisease.Diseases.Local;
+//                    DiseaseDataGrid.Items.Refresh();
+                }
+
+                if (!diseaseCorelationFlag)
+                {
+                    dbContextDiseaseCorelation.SaveChanges();
+//                    dbContextDiseaseCorelation = new DiseaseDatabaseEntities();
+//                    dbContextDiseaseCorelation.DiseaseCorelations.Load();
+//                    _diseaseCorelationViewSource.Source = dbContextDiseaseCorelation.DiseaseCorelations.Local;
+//                    DiseaseCorelationDataGrid.Items.Refresh();
+                }
+
+                if (!concreteSymptomDiseaseConnectionFlag)
+                {
+                    dbContextConcreteSymptomDiseaseConnection.SaveChanges();
+//                    dbContextConcreteSymptomDiseaseConnection = new DiseaseDatabaseEntities();
+//                    dbContextConcreteSymptomDiseaseConnection.ConcreteSymptomDiseaseConnections.Load();
+//                    _concreteSymptomDiseaseConnectionViewSource.Source =
+//                        dbContextConcreteSymptomDiseaseConnection.ConcreteSymptomDiseaseConnections.Local;
+//                    ConcreteSymptomDiseaseConnectionDataGrid.Items.Refresh();
+                }
+
+                var context = new DiseaseDatabaseEntities();
+                context.Diseases.Select(s => new { stat = QuickStatistics() }).Take(1).ToList()
+                    .ForEach(
+                        d => QuickDescriptionLabel.Content = "In database are: " + Convert.ToString(d.stat) + " diseases.");
+            
+        }
     }
 
     public class SymptomCathegoryValidation : ValidationRule
@@ -336,6 +563,10 @@ namespace VirtualDoctor
             if (cathegory.Name == null || cathegory.Name.Length == 0)
             {
                 return new ValidationResult(false, "The name value can't be empty");
+            }
+            if (cathegory.Name != null && cathegory.Name.Length > 50)
+            {
+                return new ValidationResult(false, "Cathegory name is too long. Length should be smaller than 50 characters");
             }
             if (cathegory.ParentCathegory != null && cathegory.ParentCathegory.ToString() == cathegory.Id.ToString())
             {
@@ -362,6 +593,14 @@ namespace VirtualDoctor
             {
                 return new ValidationResult(false, "The name value can't be empty");
             }
+            if (symptom.Name != null && symptom.Name.Length > 50)
+            {
+                return new ValidationResult(false, "Symptom name is too long. Length should be smaller than 50 characters");
+            }
+            if (symptom.QuickDescription != null && symptom.QuickDescription.Length > 50)
+            {
+                return new ValidationResult(false, "Symptom description is too long. Length should be smaller than 50 characters");
+            }
 
             if (symptom.GeneralizationDegree < 0 || symptom.GeneralizationDegree > 100)
             {
@@ -387,6 +626,14 @@ namespace VirtualDoctor
             if (disease.Name == null || disease.Name.Length == 0)
             {
                 return new ValidationResult(false, "The name value can't be empty");
+            }
+            if (disease.Name != null && disease.Name.Length > 50)
+            {
+                return new ValidationResult(false, "Disease name is too long. Length should be smaller than 50 characters");
+            }
+            if (disease.Description != null && disease.Description.Length > 50)
+            {
+                return new ValidationResult(false, "Diease description is too long. Length should be smaller than 50 characters");
             }
 
             if (disease.OccurencesNumber < 0)

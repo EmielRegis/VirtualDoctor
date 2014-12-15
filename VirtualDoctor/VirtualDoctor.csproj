@@ -87,10 +87,20 @@
     <Compile Include="DiseaseCorelation.cs">
       <DependentUpon>DiseaseModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="DiseaseModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DiseaseModel.Context.tt</DependentUpon>
+    </Compile>
     <Compile Include="DiseaseModel.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DiseaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DiseaseModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DiseaseModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Patient.cs">
       <DependentUpon>DiseaseModel.tt</DependentUpon>
@@ -112,16 +122,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DiseaseModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DiseaseModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DiseaseModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DiseaseModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

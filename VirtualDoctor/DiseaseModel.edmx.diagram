@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="faf223aff35a4187a8373434f27ff347" Name="Diagram1">
+      <Diagram DiagramId="2ce57163731a42dda716d3fb7266f162" Name="Diagram1" ZoomLevel="64">
         <EntityTypeShape EntityType="DiseaseDatabaseModel.ConcreteSymptomDiseaseConnection" Width="1.5" PointX="3" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="DiseaseDatabaseModel.DiseaseCorelation" Width="1.5" PointX="3" PointY="9.25" IsExpanded="true" />
         <EntityTypeShape EntityType="DiseaseDatabaseModel.Disease" Width="1.5" PointX="0.75" PointY="5.125" IsExpanded="true" />
