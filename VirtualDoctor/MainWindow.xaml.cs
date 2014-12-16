@@ -497,6 +497,12 @@ namespace VirtualDoctor
             throw new NotSupportedException();
         }
 
+//        [Edm("DiseaseDatabaseModel.Store", "NewDiseaseCase")]
+//        public static Int32? NewDiseaseCase(Int32 id)
+//        {
+//            throw new NotSupportedException();
+//        }
+
         private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
         {
             
@@ -504,47 +510,26 @@ namespace VirtualDoctor
                 if (!symptomCathegoryFlag)
                 {
                     dbContextSymptomCathegory.SaveChanges();
-//                    dbContextSymptomCathegory = new DiseaseDatabaseEntities();
-//                    dbContextSymptomCathegory.SymptomCathegories.Load();
-//                    _symptomCathegoryViewSource.Source = dbContextSymptomCathegory.SymptomCathegories.Local;
-//                    SymptomCathegoriesDataGrid.Items.Refresh();
                 }
 
                 if (!symptomFlag)
                 {
                     dbContextSymptom.SaveChanges();
-//                    dbContextSymptom = new DiseaseDatabaseEntities();
-//                    dbContextSymptom.Symptoms.Load();
-//                    _symptomViewSource.Source = dbContextSymptom.Symptoms.Local;
-//                    SymptomDataGrid.Items.Refresh();
                 }
 
                 if (!diseaseFlag)
                 {
                     dbContextDisease.SaveChanges();
-//                    dbContextDisease = new DiseaseDatabaseEntities();
-//                    dbContextDisease.Diseases.Load();
-//                    _diseaseViewSource.Source = dbContextDisease.Diseases.Local;
-//                    DiseaseDataGrid.Items.Refresh();
                 }
 
                 if (!diseaseCorelationFlag)
                 {
                     dbContextDiseaseCorelation.SaveChanges();
-//                    dbContextDiseaseCorelation = new DiseaseDatabaseEntities();
-//                    dbContextDiseaseCorelation.DiseaseCorelations.Load();
-//                    _diseaseCorelationViewSource.Source = dbContextDiseaseCorelation.DiseaseCorelations.Local;
-//                    DiseaseCorelationDataGrid.Items.Refresh();
                 }
 
                 if (!concreteSymptomDiseaseConnectionFlag)
                 {
                     dbContextConcreteSymptomDiseaseConnection.SaveChanges();
-//                    dbContextConcreteSymptomDiseaseConnection = new DiseaseDatabaseEntities();
-//                    dbContextConcreteSymptomDiseaseConnection.ConcreteSymptomDiseaseConnections.Load();
-//                    _concreteSymptomDiseaseConnectionViewSource.Source =
-//                        dbContextConcreteSymptomDiseaseConnection.ConcreteSymptomDiseaseConnections.Local;
-//                    ConcreteSymptomDiseaseConnectionDataGrid.Items.Refresh();
                 }
 
                 var context = new DiseaseDatabaseEntities();
@@ -552,6 +537,26 @@ namespace VirtualDoctor
                     .ForEach(
                         d => QuickDescriptionLabel.Content = "In database are: " + Convert.ToString(d.stat) + " diseases.");
             
+        }
+
+        private void CaseButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!diseaseFlag)
+            {
+                string sret;
+                Int32 id = (Int32) CaseComboBox.SelectedValue;
+
+                var context = new DiseaseDatabaseEntities();
+                context.NewDiseaseCase(id);
+
+                dbContextDisease = new DiseaseDatabaseEntities();
+                dbContextDisease.Diseases.Load();
+                _diseaseViewSource.Source = dbContextDisease.Diseases.Local;
+                DiseaseDataGrid.Items.Refresh();
+
+                var contx = new DiseaseDatabaseEntities();
+                contx.Diseases.Select(d => new {});
+            }
         }
     }
 

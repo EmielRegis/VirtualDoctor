@@ -12,6 +12,8 @@ namespace VirtualDoctor
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class DiseaseDatabaseEntities : DbContext
     {
@@ -32,5 +34,14 @@ namespace VirtualDoctor
         public virtual DbSet<Patient> Patients { get; set; }
         public virtual DbSet<SymptomCathegory> SymptomCathegories { get; set; }
         public virtual DbSet<Symptom> Symptoms { get; set; }
+    
+        public virtual int NewDiseaseCase(Nullable<int> id)
+        {
+            var idParameter = id.HasValue ?
+                new ObjectParameter("id", id) :
+                new ObjectParameter("id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("NewDiseaseCase", idParameter);
+        }
     }
 }

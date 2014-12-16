@@ -184,6 +184,9 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="NewDiseaseCase" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id" Type="int" Mode="In" />
+        </Function>
         <Function Name="QuickStatistics" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
         <EntityContainer Name="DiseaseDatabaseModelStoreContainer">
           <EntitySet Name="ConcreteSymptomDiseaseConnections" EntityType="Self.ConcreteSymptomDiseaseConnections" Schema="dbo" store:Type="Tables" />
@@ -466,6 +469,9 @@
             <End Role="SymptomCathegories" EntitySet="SymptomCathegories" />
             <End Role="Symptoms" EntitySet="Symptoms" />
           </AssociationSet>
+          <FunctionImport Name="NewDiseaseCase">
+            <Parameter Name="id" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
@@ -559,6 +565,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="NewDiseaseCase" FunctionName="DiseaseDatabaseModel.Store.NewDiseaseCase" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
