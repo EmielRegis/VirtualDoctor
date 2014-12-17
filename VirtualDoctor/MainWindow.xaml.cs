@@ -558,6 +558,19 @@ namespace VirtualDoctor
                 contx.Diseases.Select(d => new {});
             }
         }
+
+        private void CaseComboBox_OnDropDownOpened(object sender, EventArgs e)
+        {
+            if (!diseaseFlag)
+            {
+                dbContextDisease.SaveChanges();
+
+                dbContextDiseaseCorelation = new DiseaseDatabaseEntities();
+                dbContextDiseaseCorelation.Diseases.Load();
+                _diseasesListRemote.Source = dbContextDiseaseCorelation.Diseases.Local;
+                CaseComboBox.Items.Refresh();
+            }
+        }
     }
 
     public class SymptomCathegoryValidation : ValidationRule

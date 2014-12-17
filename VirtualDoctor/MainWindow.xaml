@@ -368,7 +368,7 @@
         </TabControl>
         <Label x:Name="QuickDescriptionLabel" Content="" HorizontalAlignment="Left" Margin="805,72,0,0" VerticalAlignment="Top" Width="157"/>
         <Button x:Name="RefreshButton" Content="Refresh base" Click="RefreshButton_OnClick" HorizontalAlignment="Left" Margin="827,103,0,0" VerticalAlignment="Top" Width="113"/>
-        <ComboBox x:Name="CaseComboBox" HorizontalAlignment="Left" Margin="757,191,0,0" VerticalAlignment="Top" Width="160"
+        <ComboBox DropDownOpened="CaseComboBox_OnDropDownOpened" x:Name="CaseComboBox" HorizontalAlignment="Left" Margin="757,191,0,0" VerticalAlignment="Top" Width="160"
 
            
                                 SelectedValuePath="Id"
