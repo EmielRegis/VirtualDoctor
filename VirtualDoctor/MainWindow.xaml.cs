@@ -327,9 +327,9 @@ namespace VirtualDoctor
             if (cat != null)
             {
                 e.Accepted =
-                    (dbContextDiseaseCorelation.Diseases.First(s => s.Id == cat.DiseaseA)
+                    (dbContextDiseaseCorelation.Diseases.Local.First(s => s.Id == cat.DiseaseA)
                         .Name.ToUpper().Contains(DiseaseCorelationsSearchBox.Text.ToUpper())) ||
-                    (dbContextDiseaseCorelation.Diseases.First(s => s.Id == cat.DiseaseB)
+                    (dbContextDiseaseCorelation.Diseases.Local.First(s => s.Id == cat.DiseaseB)
                         .Name.ToUpper().Contains(DiseaseCorelationsSearchBox.Text.ToUpper()));
             }
         }
@@ -379,11 +379,13 @@ namespace VirtualDoctor
             ConcreteSymptomDiseaseConnection cat = e.Item as ConcreteSymptomDiseaseConnection;
             if (cat != null)
             {
+                dbContextConcreteSymptomDiseaseConnection.Symptoms.Load();
+
                 e.Accepted =
-                    (dbContextConcreteSymptomDiseaseConnection.Diseases.First(d => d.Id == cat.Disease)
-                        .Name.ToUpper().Contains(DiseaseCorelationsSearchBox.Text.ToUpper())) ||
-                    (dbContextConcreteSymptomDiseaseConnection.Symptoms.First(s => s.Id == cat.Symptom)
-                        .Name.ToUpper().Contains(DiseaseCorelationsSearchBox.Text.ToUpper()));
+                    (dbContextConcreteSymptomDiseaseConnection.Diseases.Local.First(d => d.Id == cat.Disease)
+                        .Name.ToUpper().Contains(ConcreteSymptomDiseaseConnectionsSearchBox.Text.ToUpper())) ||
+                    (dbContextConcreteSymptomDiseaseConnection.Symptoms.Local.First(s => s.Id == cat.Symptom)
+                        .Name.ToUpper().Contains(ConcreteSymptomDiseaseConnectionsSearchBox.Text.ToUpper()));
             }
         }
 
