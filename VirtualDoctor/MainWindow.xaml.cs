@@ -101,12 +101,6 @@ namespace VirtualDoctor
 
             _concreteSymptomsListRemote = ((CollectionViewSource) (FindResource("concreteSymptomsListRemote")));
             _concreteSymptomsListRemote.Source = dbContextConcreteSymptomDiseaseConnection.Symptoms.Local;
-
-
-            var context = new DiseaseDatabaseEntities();
-            context.Diseases.Select(s => new {stat = QuickStatistics()}).Take(1).ToList()
-                .ForEach(
-                    d => QuickDescriptionLabel.Content = "In database are: " + Convert.ToString(d.stat) + " diseases.");
         }
 
         private void SymptomCathegoryRowUpdate(object sender,
@@ -263,12 +257,6 @@ namespace VirtualDoctor
             ConcreteSymptomDiseaseConnectionDataGrid.Items.Refresh();
 
             DiseaseDataGrid.Items.Refresh();
-
-            var context = new DiseaseDatabaseEntities();
-            context.Diseases.Select(s => new {stat = QuickStatistics()}).Take(1).ToList()
-                .ForEach(
-                    d => QuickDescriptionLabel.Content = "In database are: " + Convert.ToString(d.stat) + " diseases.");
-
             diseaseFlag = false;
 
         }
@@ -533,31 +521,26 @@ namespace VirtualDoctor
                 {
                     dbContextConcreteSymptomDiseaseConnection.SaveChanges();
                 }
-
-                var context = new DiseaseDatabaseEntities();
-                context.Diseases.Select(s => new { stat = QuickStatistics() }).Take(1).ToList()
-                    .ForEach(
-                        d => QuickDescriptionLabel.Content = "In database are: " + Convert.ToString(d.stat) + " diseases.");
-            
+      
         }
 
         private void CaseButton_Click(object sender, RoutedEventArgs e)
         {
             if (!diseaseFlag)
             {
-                string sret;
-                Int32 id = (Int32) CaseComboBox.SelectedValue;
-
-                var context = new DiseaseDatabaseEntities();
-                context.NewDiseaseCase(id);
-
-                dbContextDisease = new DiseaseDatabaseEntities();
-                dbContextDisease.Diseases.Load();
-                _diseaseViewSource.Source = dbContextDisease.Diseases.Local;
-                DiseaseDataGrid.Items.Refresh();
-
-                var contx = new DiseaseDatabaseEntities();
-                contx.Diseases.Select(d => new {});
+//                string sret;
+//                Int32 id = (Int32) CaseComboBox.SelectedValue;
+//
+//                var context = new DiseaseDatabaseEntities();
+//                context.NewDiseaseCase(id);
+//
+//                dbContextDisease = new DiseaseDatabaseEntities();
+//                dbContextDisease.Diseases.Load();
+//                _diseaseViewSource.Source = dbContextDisease.Diseases.Local;
+//                DiseaseDataGrid.Items.Refresh();
+//
+//                var contx = new DiseaseDatabaseEntities();
+//                contx.Diseases.Select(d => new {});
             }
         }
 
@@ -570,7 +553,6 @@ namespace VirtualDoctor
                 dbContextDiseaseCorelation = new DiseaseDatabaseEntities();
                 dbContextDiseaseCorelation.Diseases.Load();
                 _diseasesListRemote.Source = dbContextDiseaseCorelation.Diseases.Local;
-                CaseComboBox.Items.Refresh();
             }
         }
     }
